@@ -77,8 +77,15 @@ h1.titre-long{font-size:clamp(1.4rem,4.4vw,2rem);line-height:1.15}
 .btn.niv.n1{background:var(--vert-clair);border-color:var(--vert)}
 .btn.niv.n2{background:var(--jaune-clair);border-color:var(--jaune)}
 .btn.niv.n3{background:var(--bleu-clair);border-color:var(--bleu)}
-.chrono{display:inline-flex;align-items:center;gap:8px;font-size:.95rem;min-height:44px;cursor:pointer;color:#4a4a49}
-.chrono input{width:22px;height:22px;accent-color:var(--bleu);cursor:pointer}
+.chrono{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:.85rem;min-height:44px;min-width:44px;cursor:pointer;color:#5d6b6e}
+.chrono input{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chrono .inter{position:relative;flex:none;width:38px;height:22px;border-radius:11px;background:#d5dadc;transition:background .2s}
+.chrono .inter::before{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.chrono .inter::after{content:"";position:absolute;top:50%;left:9px;width:4px;height:8px;margin-top:-6px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0)}
+.chrono input:checked+.inter{background:#36BBD6}
+.chrono input:checked+.inter::before{transform:translateX(16px)}
+.chrono input:checked+.inter::after{transform:rotate(45deg) scale(1)}
+.chrono input:focus-visible+.inter{outline:3px solid #2E2E2D;outline-offset:2px}
 .modele{display:block;max-width:min(100%,300px);max-height:340px;width:auto;height:auto;border-radius:16px;border:3px solid var(--bleu);box-shadow:0 3px 8px rgba(46,46,45,.15);background:#fff}
 .vignette{height:56px;width:auto;border-radius:10px;border:2px solid var(--bleu);background:#fff}
 
@@ -120,7 +127,7 @@ h1.titre-long{font-size:clamp(1.4rem,4.4vw,2rem);line-height:1.15}
 .aide[aria-pressed="true"],.aide[aria-expanded="true"]{background:var(--jaune);border-color:#d9a403}
 .aide[disabled]{opacity:.45;cursor:default}
 .aide.pulse{animation:pulse .7s ease 2}
-.chrono-aff{font-weight:bold;font-variant-numeric:tabular-nums;min-width:64px;text-align:center;color:#4a4a49}
+.chrono-aff{font-weight:bold;font-size:.85rem;font-variant-numeric:tabular-nums;text-align:center;color:#4a4a49;background:#eef2f3;border-radius:999px;padding:2px 10px}
 @keyframes secoue{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @keyframes lueur{0%,100%{background-color:rgba(252,193,4,.2)}50%{background-color:rgba(252,193,4,.5)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
@@ -281,7 +288,7 @@ const niveauxTermines=new Set();           // niveaux réussis pendant la sessio
 const parlerSiLibre=rel=>{ if(!Son.occupe()) Son.suite([rel]); };   // encouragements : ne coupent jamais une consigne en cours
 let nettoyages=[];
 function debut(){ nettoyages.forEach(f=>{ try{f();}catch(_){} }); nettoyages=[]; return nouvelEcran(); }
-const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 function ordreMelange(t){ let a; do{ a=melanger([...Array(t).keys()]); }while(t>1&&a.every((v,i)=>v===i)); return a; }   // Fisher-Yates, jamais l'ordre d'origine
 
 function accueil(){
@@ -289,7 +296,7 @@ function accueil(){
   const ecoute=h('button',{type:'button',class:'btn second',onclick:()=>{ parler(D.accueil.audio); }},'🔊 Écouter');
   const bouton=(n,N)=>h('button',{type:'button',class:'btn niv n'+(n+1),onclick:()=>{ Activite.commencee=true; apercu(n); }},
     h('b',{text:'Niveau '+(n+1)}),h('span',{text:N.nom}),h('span',{text:N.cols*N.rows+' pièces'}));
-  const chrono=h('label',{class:'chrono'},h('input',{type:'checkbox',checked:chronoActif,onchange:e=>{ chronoActif=e.target.checked; }}),'⏱ Chronomètre (facultatif)');
+  const chrono=h('label',{class:'chrono'},h('input',{type:'checkbox',checked:chronoActif,onchange:e=>{ chronoActif=e.target.checked; }}),h('span',{class:'inter','aria-hidden':'true'}),'🕒 Chronomètre');
   scene.replaceChildren(h('section',{class:'ecran'},
     h('p',{class:'entete',text:'Je rencontre Léo et Fadi'}),
     h('h1',{class:'bandeau-titre titre-long',text:'Le Puzzle de Léo et Fadi'}),
@@ -356,7 +363,7 @@ function jeu(n){
       if(aide3){ aide(3); if(!selection){ const premiere=ordre.map(i=>pieces[i]).find(p=>!p.classList.contains('posee')); if(premiere) choisir(premiere); } }
       majIndice(); }},h('span',{class:'n',text:'3'}),'🎯 Où ?');
   const boutonsAide=[b1,b2,b3];
-  const aff=h('span',{class:'chrono-aff','aria-hidden':'true',text:'⏱ 0:00'});
+  const aff=h('span',{class:'chrono-aff','aria-hidden':'true',text:'00:00'});
   const aides=h('div',{class:'aides',role:'group','aria-label':'Aides facultatives'},boutonsAide,chronoActif?aff:null);
   const zoneFin=h('div',{class:'fete',hidden:true});
   const menu=h('button',{type:'button',class:'btn second petit',onclick:()=>{ accueil(); }},'↩ Menu');
@@ -385,7 +392,7 @@ function jeu(n){
   window.addEventListener('resize',mesurer); nettoyages.push(()=>window.removeEventListener('resize',mesurer));
 
   /* ----- chronomètre facultatif : temps écoulé seulement, ni limite ni pénalité ----- */
-  if(chronoActif){ const t=setInterval(()=>{ if(!document.hidden&&!fini){ secondes++; aff.textContent='⏱ '+fmt(secondes); } },1000); nettoyages.push(()=>clearInterval(t)); }
+  if(chronoActif){ const t=setInterval(()=>{ if(!document.hidden&&!fini){ secondes++; aff.textContent=fmt(secondes); } },1000); nettoyages.push(()=>clearInterval(t)); }
 
   /* ----- sélection ----- */
   function majIndice(){ slots.forEach(s=>s.classList.remove('indice')); if(aide3&&selection&&!fini) slots[selection.dataset.idx|0].classList.add('indice'); }
