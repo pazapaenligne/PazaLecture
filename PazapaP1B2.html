@@ -189,7 +189,7 @@ const D = {
     ]}
   ],
   aides:{
-    presque:{texte:'Écoute encore, je vais t’aider !', audio:'aides/presque-ecoute-encore.mp3'},
+    presque:{texte:'Presque ! Écoute encore.', audio:'aides/presque-ecoute-encore.mp3'},
     unIndice:{texte:'Un petit indice…', audio:'aides/un-indice.mp3'},
     regardeBien:{texte:'Regarde bien les portraits.', audio:'aides/regarde-bien-portraits.mp3'},
     regarde:{texte:'Regarde bien ce portrait.', audio:'aides/regarde-ici.mp3'}
@@ -420,7 +420,10 @@ function fin(){
       h('div',{class:'actions'},
         h('button',{type:'button',class:'btn second',onclick:()=>{ if(!bloque()) Son.suite([D.fin.audio]); }},'🔊 Écouter'),
         h('button',{type:'button',class:'btn principal',onclick:()=>{ if(!bloque()) accueil(); }},'↻ Rejouer')))));
-  (async()=>{ Etat.felicitationEnCours=true; majVerrou(); await attendre(Son.suite([D.fin.audio],600)); if(id!==ecranId) return; Etat.felicitationEnCours=false; majVerrou(); })();
+  // même mécanisme que les questions : un identifiant de séquence ; l'onglet quitté l'invalide (visibilitychange → invaliderSequences)
+  let seqFin=0; const mon=++seqFin;
+  invaliderSequences=()=>{ seqFin++; };
+  (async()=>{ Etat.felicitationEnCours=true; majVerrou(); await attendre(Son.suite([D.fin.audio],600)); if(id!==ecranId||mon!==seqFin) return; Etat.felicitationEnCours=false; majVerrou(); })();
 }
 
 /* ---------- hauteur automatique (iframe Moodle) ---------- */
