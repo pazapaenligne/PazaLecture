@@ -258,18 +258,18 @@ window.PAZAPA_DONNEES = {
   /* ---------- Textes affichés à l'écran ----------
      Mêmes phrases que les consignes enregistrées (audio.consignes). */
   textes: {
-    accueil: "Avec Léo et Fadi, pars à la découverte du son « i » !",
-    manche1: "Écoute bien le son « i », puis écoute les mots.",
+    accueil: "Avec Léo et Fadi, pars à la découverte du son « I » !",
+    manche1: "Écoute bien le son « I », puis écoute les mots.",
     manche1Fin: "Tu as tout écouté, bravo !",
     manche2: "Écoute le mot et range l'image dans la bonne boîte.",
     manche3: "Écoute le mot, puis retrouve la bonne image.",
-    manche4: "Écoute bien le mot. Entends-tu le son « i » ?",
-    fin:     "Bravo ! Tu as terminé le jeu du son « i » !",
+    manche4: "Écoute bien le mot. Entends-tu le son « I » ?",
+    fin:     "Bravo ! Tu as terminé le jeu du son « I » !",
     // même ordre que audio.encouragements
     encouragements: ["Bravo !", "Super !", "Très bien !", "Tu as réussi !"],
     aides: {
       reessaie:  "Écoute encore une fois.",
-      ecouteSon: "Écoute bien le son « i ».",
+      ecouteSon: "Écoute bien le son « I ».",
       regarde:   "Regarde bien les images et réessaie."
     }
   },
@@ -361,7 +361,7 @@ const haut = document.getElementById('haut');
 const pied = document.getElementById('pied');
 const DEBUG = !D.verifieManuel || /[?&]debug/.test(location.search);
 const MOTS = D.mots.map((m,i)=>Object.assign({num:i+1},m));
-const PH = '/'+D.phoneme+'/';
+const PH = '/'+D.phoneme.toUpperCase()+'/';
 const T = D.textes;   // textes affichés (identiques aux consignes enregistrées)
 const MOT_AUTO = !D.reglages || D.reglages.motAutomatique !== false;   // le mot se lance seul (après une pause) ; false = clic uniquement
 const CONSIGNE_AUTO = !D.reglages || D.reglages.consigneAutomatique !== false;   // la consigne se lance seule à l'arrivée sur une manche
@@ -608,12 +608,12 @@ function accueil(){
   Son.arreter(); bulleEl = null; nFelic = 0; resetEtats();
   Activite.commencee = false; Activite.terminee = false; Activite.reussie = null; Activite.erreurs = 0;
   // l'écran d'accueil n'a pas de progression : le titre prend la place du bandeau des manches (renderHaut le remplace dès la manche 1)
-  haut.replaceChildren(h('div',{class:'bandeau-titre'},h('h1',{class:'titre-i'},'J’entends le son ',h('span',{class:'lettre-rouge',text:'i'}))));
+  haut.replaceChildren(h('div',{class:'bandeau-titre'},h('h1',{class:'titre-i'},'J’entends le son ',h('span',{class:'lettre-rouge',text:'I'}))));
   scene.replaceChildren(h('section',{class:'ecran ecran-accueil'},
     h('div',{class:'composition'},
     h('div',{class:'persos'+(D.personnages.leo.image&&D.personnages.fadi.image?' dessin':'')},perso('leo'),perso('fadi'))),
     h('div',{class:'phrase-i'},
-      h('p',{class:'texte-accueil',text:'Avec Léo et Fadi, pars à la découverte du son i !'})),
+      h('p',{class:'texte-accueil',text:'Avec Léo et Fadi, pars à la découverte du son I !'})),
     h('div',{class:'actions actions-i'},
       btnSon([A.consignes.accueil],'large','🔊 Écouter','Écouter la présentation'),
       h('button',{type:'button',class:'btn principal',onclick:manche1},'▶ Commencer'))));
@@ -650,7 +650,7 @@ function manche1(){
   scene.replaceChildren(
     titreManche(T.manche1,A.consignes.manche1),
     h('div',{class:'grille'},tuiles),
-    h('div',{class:'actions'},btnSon([A.phoneme],'large','🔊 '+PH,'Écouter le son '+D.phoneme),suivant),
+    h('div',{class:'actions'},btnSon([A.phoneme],'large','🔊 '+PH,'Écouter le son '+D.phoneme.toUpperCase()),suivant),
     nouvelleBulle());
   if(CONSIGNE_AUTO){
     Etat.consigneEnCours = true; majVerrou();
