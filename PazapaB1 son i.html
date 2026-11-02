@@ -148,6 +148,7 @@ button:focus-visible,.carte:focus-visible{outline:4px solid var(--bleu);outline-
 .bulle.sortie{opacity:0;transition:opacity .25s ease}
 .bperso{display:none;flex:none;height:clamp(76px,15vw,100px)}
 .bulle.avecperso .bperso{display:block}
+.bulle.avecperso{padding:12px 14px}
 .bperso img{display:block;height:100%;width:auto;animation:entree .55s ease-out both}
 .verrou .son,.verrou .btn,.verrou button.phon{opacity:.45;cursor:default}
 .verrou .tuile,.verrou .zone,.verrou .choix,.verrou .rep,.verrou .carte{cursor:progress}
@@ -167,7 +168,8 @@ button.phon.presente{padding:0;min-height:0;border-radius:18px}
 .ecran-accueil .persos.dessin{gap:22px}
 .ecran-accueil .perso{gap:2px;font-size:.95rem}
 .ligne-i{gap:clamp(14px,4vw,32px)}
-.bandeau-titre{display:flex;align-items:center;justify-content:center;gap:clamp(8px,2vw,16px)}
+.bandeau-titre{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.bandeau-titre .niveau{margin:0;font-size:.8rem;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;color:#6a6a69}
 .groupe-consigne{display:flex;align-items:center;justify-content:center;gap:8px;flex:0 1 auto}
 .groupe-consigne p{margin:0}
 .consigne .pazita-i{height:clamp(40px,7vw,52px)}
@@ -608,7 +610,7 @@ function accueil(){
   Son.arreter(); bulleEl = null; nFelic = 0; resetEtats();
   Activite.commencee = false; Activite.terminee = false; Activite.reussie = null; Activite.erreurs = 0;
   // l'écran d'accueil n'a pas de progression : le titre prend la place du bandeau des manches (renderHaut le remplace dès la manche 1)
-  haut.replaceChildren(h('div',{class:'bandeau-titre'},h('h1',{class:'titre-i'},'J’entends le son ',h('span',{class:'lettre-rouge',text:'I'}))));
+  haut.replaceChildren(h('div',{class:'bandeau-titre'},h('p',{class:'niveau',text:'Niveau 1'}),h('h1',{class:'titre-i'},'J’entends le son ',h('span',{class:'lettre-rouge',text:'I'}))));
   scene.replaceChildren(h('section',{class:'ecran ecran-accueil'},
     h('div',{class:'composition'},
     h('div',{class:'persos'+(D.personnages.leo.image&&D.personnages.fadi.image?' dessin':'')},perso('leo'),perso('fadi'))),
@@ -639,7 +641,7 @@ function manche1(){
         vus.add(m.id); t.classList.add('vu');    // « écouté » = audio terminé (ou illisible : secours)
         renderHaut(1,vus.size,MOTS.length);
         if(vus.size===MOTS.length && !bloque() && !finDit){
-          finDit = true; dire(T.manche1Fin || 'Tu as tout écouté, bravo !');
+          finDit = true; dire(T.manche1Fin || 'Tu as tout écouté, bravo !', 'leo');   // Léo félicite (illustration « joie »)
           Etat.consigneEnCours = true; majVerrou();                       // la phrase de fin est obligatoire : on attend sa fin réelle
           attendre(Son.suite([A.consignes.manche1Fin])).finally(()=>{ Etat.consigneEnCours = false; majVerrou(); suivant.disabled = false; });
         }
