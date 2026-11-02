@@ -509,7 +509,7 @@ function jeu(n){
       : [h('button',{type:'button',class:'btn principal',onclick:()=>{ apercu(n+1); }},'Niveau suivant ▶')];
     if(tous) Activite.termine=true;
     zoneFin.replaceChildren(h('div',{class:'etoiles','aria-hidden':'true',text:'★★★'}),h('p',{class:'phrase',text:msg.texte}),
-      chronoActif?h('p',{class:'chrono-aff',text:'Temps : '+fmt(secondes)}):null,h('div',{class:'actions'},boutons));
+      ...(chronoActif?[h('p',{class:'chrono-aff',text:'Temps : '+fmt(secondes)})]:[]),h('div',{class:'actions'},boutons));
     parler(msg.audio);
     boutons[0].focus();
   }
