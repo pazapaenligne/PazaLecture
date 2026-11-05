@@ -20,7 +20,7 @@
   (accueil, consignes 2 à 4, fin) sont VIDES et sans effet tant qu'ils ne sont pas remplis (chaîne « data:audio/mpeg;base64,... » ou URL).
   Aucun audio ne démarre à l'ouverture de la page.
 
-  Résultats : gardés en mémoire dans la page, affichés dans le bilan (espace adulte). Un message anonyme
+  Résultats : gardés en mémoire dans la page (le bilan enfant n'affiche aucun chiffre). Un message anonyme
     window.parent.postMessage({type:'pazapa-test-resultats', ...})
   est envoyé au parent à la fin du test (aucun nom, aucune donnée personnelle). Moodle ne l'enregistre pas sans dispositif séparé.
 
@@ -140,6 +140,48 @@ button:focus-visible{outline:4px solid var(--bleu);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rappel{opacity:1}}
 
 /* ===== TEST : ajouts ===== */
+/* correction (après le test) */
+.correction{gap:14px}
+.correction h1{margin:0;font-size:clamp(1.3rem,4.4vw,2rem)}
+.corr-intro{margin:0;font-size:clamp(1rem,3.2vw,1.2rem);text-align:center}
+.corr-section{width:100%;max-width:720px;background:#fff;border:3px dotted var(--bleu);border-radius:22px;padding:12px clamp(10px,3vw,18px);display:flex;flex-direction:column;align-items:center;gap:10px}
+.corr-section h2{margin:0;font-size:clamp(1.05rem,3.4vw,1.35rem);text-align:center}
+.corr-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%}
+.corr-liste{display:flex;flex-direction:column;gap:12px;width:100%}
+.corr-q{background:var(--bleu-clair);border-radius:18px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.corr-tete{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.corr-tete img{height:clamp(80px,18vw,110px);width:auto;max-width:100%;display:block}
+.corr-manche{margin:0;font-weight:bold}
+.corr-ligne-rep{margin:0;border-radius:14px;padding:6px 12px;font-size:clamp(.95rem,3vw,1.1rem);width:100%;max-width:460px}
+.corr-ligne-rep.ta{background:#fff;border:2px dashed #9a9a99}
+.corr-ligne-rep.bonne{background:var(--vert-clair);border:2px solid var(--vert)}
+.corr-ligne-rep .lab{font-weight:normal}
+.corr-case-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:clamp(48px,12vw,64px)}
+.corr-case-wrap .tag{font-size:.78rem;font-weight:bold;min-height:1.1em;color:#4a4a49}
+.tag-mot{font-size:.85rem;font-weight:bold;background:#fff;border:2px solid #9a9a99;border-radius:12px;padding:2px 10px}
+.corr-mot3.oublie{background:var(--jaune-clair)}
+.corr-mot3.a-tort{background:#f1f1f1}
+.corr-statut-trace{margin:0;font-size:clamp(1.1rem,3.6vw,1.4rem);font-weight:bold;border-radius:14px;padding:6px 16px;background:#fff;border:2px solid var(--bleu)}
+.persos.petit img{height:clamp(70px,16vw,100px)}
+.corr-grille.g5{grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+.corr-lignes{display:flex;flex-direction:column;gap:12px;width:100%}
+.corr-item{background:var(--bleu-clair);border-radius:18px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.corr-item img{height:clamp(80px,18vw,110px);width:auto;max-width:100%;display:block}
+.corr-mot{display:flex;align-items:center;justify-content:center;gap:8px;font-size:1.15rem}
+.corr-rep{margin:0;border-radius:14px;padding:6px 10px;font-weight:bold;font-size:clamp(.95rem,3vw,1.1rem)}
+.corr-rep.oui{background:var(--vert-clair);border:2px solid var(--vert)}
+.corr-rep.non{background:#fff;border:2px solid var(--bleu)}
+.etat{margin:0;font-size:.95rem}
+.etat.bien{color:#4a6b00;font-weight:bold}
+.etat.ensemble{color:#6a5200}
+.corr-ligne{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bleu-clair);border-radius:18px;padding:10px}
+.corr-lettres{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.corr-case{width:clamp(48px,12vw,64px);height:clamp(48px,12vw,64px);display:flex;align-items:center;justify-content:center;background:#fff;border:3px solid var(--gris-clair);border-radius:14px;font-size:clamp(1.6rem,6vw,2.2rem);font-weight:bold}
+.corr-case.est-i{border-color:var(--vert);background:var(--vert-clair);box-shadow:0 0 0 4px rgba(201,214,70,.55)}
+.corr-case.choisie{border-style:dashed;border-color:#9a9a99}
+.corr-texte{margin:0;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:bold;letter-spacing:.08em}
+.lettre-i{color:var(--rouge)}
+.corr-trace{width:min(100%,200px)}
 .zone-aide{display:flex;justify-content:center;margin-top:4px}
 .aide-btn{color:#4a4a49;border-color:#9a9a99!important;background:#fff!important}
 .appel{border-color:var(--jaune)!important;box-shadow:0 0 0 6px var(--jaune)}
@@ -181,15 +223,6 @@ button:focus-visible{outline:4px solid var(--bleu);outline-offset:3px}
 .bilan-ligne.revoir{background:var(--jaune-clair);border-color:var(--jaune)}
 .bilan-ligne .ico{font-size:1.8rem;line-height:1;flex:none}
 .bilan-ligne small{display:block;font-weight:normal;font-size:.8em;color:#4a4a49}
-.adulte{width:100%;max-width:640px;margin-top:10px;text-align:left}
-.adulte summary{cursor:pointer;list-style:none;display:flex;justify-content:center}
-.adulte summary span{font-size:.9rem;color:#4a4a49;text-decoration:underline;padding:10px 14px;display:inline-block;min-height:44px}
-.adulte[open] summary span{text-decoration:none;font-weight:bold}
-.adulte .corps{border:2px dashed #9a9a99;border-radius:16px;padding:12px 14px;margin-top:6px;background:#fafafa;font-size:.95rem}
-.adulte table{width:100%;border-collapse:collapse;margin:8px 0}
-.adulte th,.adulte td{border-bottom:1px solid var(--gris-clair);padding:6px 6px;text-align:left;vertical-align:top}
-.adulte .note{font-size:.85rem;color:#4a4a49;margin:6px 0 0}
-.adulte details.det{margin-top:6px} .adulte details.det summary{display:block;font-size:.9rem}
 </style>
 </head>
 <body>
@@ -477,7 +510,7 @@ async function activite2(m){
     b.addEventListener('click',()=>{ if(Etat.verrou) return; choix = L; aide.effacer(); cases.forEach(x=>{ x.classList.toggle('choisi',x===b); x.setAttribute('aria-pressed',x===b?'true':'false'); }); zv.maj(); });
     return b;
   });
-  const enregistrer = v=>{ Res.a2.push({manche:m+1, nb:cfg.n, donne:v, ok:v===D.lettre}); fait++; renderHaut(2);
+  const enregistrer = v=>{ Res.a2.push({manche:m+1, nb:cfg.n, donne:v, ok:v===D.lettre, lettres:ordre.slice()}); fait++; renderHaut(2);
     suite(id, ()=> m<D.manches2.length-1 ? activite2(m+1) : activite3(0)); };
   const garde = bV=>{ if(choix!==null) return false; secousse(bV); return true; };
   const zv = zoneValider(id,{ pret:()=>choix!==null, garde, valider:()=>enregistrer(choix) });
@@ -560,7 +593,7 @@ async function activite4(){
 }
 
 /* ==========================================================================
-   BILAN — encourageant pour l'enfant ; espace adulte distinct (replié par défaut)
+   BILAN — encourageant pour l'enfant (aucun chiffre, aucune note)
    ========================================================================== */
 function calculer(){
   const r = {};
@@ -573,28 +606,7 @@ function calculer(){
   r.a4 = { statut:Res.a4==='realise' ? 'realise' : 'non_realise' };     // jamais « Acquis » : aucune note de qualité du tracé
   return r;
 }
-function lignesAdulte(r){
-  const lignes = [];
-  D.competences.forEach(c=>{
-    const x = r[c.cle];
-    if(c.cle==='a4'){
-      lignes.push(h('tr',{},h('td',{text:c.court}), h('td',{text: x.statut==='realise' ? 'Tracé réalisé' : 'Tracé non réalisé'}),
-        h('td',{text:'Non évalué automatiquement'})));
-    } else {
-      lignes.push(h('tr',{},h('td',{text:c.court}), h('td',{text:x.bon+' / '+x.total+' ('+Math.round(100*x.ratio)+' %)'}),
-        h('td',{text: x.acquis ? 'Acquis' : 'À consolider'})));
-    }
-  });
-  return lignes;
-}
-function detailsAdulte(){
-  const li = [];
-  Res.a1.forEach(x=>li.push('Son I — '+x.mot+' : '+(x.donne===null?'passé':x.donne?'« oui »':'« non »')+' (attendu '+(x.attendu?'« oui »':'« non »')+')'));
-  Res.a2.forEach(x=>li.push('Lettre I — manche '+x.manche+' ('+x.nb+' lettres) : '+(x.donne===null?'passée':x.ok?'I trouvé':'a choisi '+x.donne)));
-  Res.a3.forEach(x=>li.push('Mots — '+x.mot+' : '+(x.donne?'sélectionné':'non sélectionné')+' (attendu '+(x.attendu?'sélectionné':'non sélectionné')+')'));
-  return h('details',{class:'det'},h('summary',{},h('span',{text:'Voir le détail des réponses'})),h('ul',{style:'margin:6px 0 0;padding-left:18px'},li.map(t=>h('li',{text:t}))));
-}
-function bilan(){
+function bilan(retour){
   const id = nouvelEcran(); renderHaut(5);
   const r = calculer();
   const lignes = D.competences.map(c=>{
@@ -603,23 +615,96 @@ function bilan(){
       h('span',{class:'ico','aria-hidden':'true'},c.cle==='a4' ? (ok?'✏️':'🌱') : (ok?'⭐':'🌱')),
       h('div',{},ok?c.enfantOk:c.enfantRevoir));
   });
-  const adulte = h('details',{class:'adulte'},
-    h('summary',{},h('span',{text:'Espace adulte'})),
-    h('div',{class:'corps'},
-      h('strong',{text:'Résultats par compétence — Lettre I'}),
-      h('table',{},h('thead',{},h('tr',{},h('th',{text:'Compétence'}),h('th',{text:'Résultat'}),h('th',{text:'Mention'}))),h('tbody',{},lignesAdulte(r))),
-      detailsAdulte(),
-      h('p',{class:'note',text:'Seuil indicatif : '+Math.round(CONFIG.seuil*100)+' % de réponses justes. Le tracé n’est pas noté par le programme : à observer avec l’enfant.'})));
   scene.replaceChildren(h('section',{class:'ecran fin'},
     h('div',{class:'persos'},h('img',{src:IMG.leo,alt:'Léo',draggable:'false'}),h('img',{src:IMG.fadi,alt:'Fadi',draggable:'false'})),
     h('h1',{text:D.textes.fin}),
     h('div',{class:'bilan-liste'},lignes),
     h('div',{class:'actions'},
       btnSon(AUDIO.fin,'🔊','Écouter le message de fin'),
-      h('button',{type:'button',class:'btn second',onclick:accueil},'↻ Rejouer le test')),
-    adulte));
-  Son.jouer(AUDIO.fin);
-  envoyerResultats(r);
+      h('button',{type:'button',class:'btn principal',onclick:()=>correction(0)},'Voir la correction'),
+      h('button',{type:'button',class:'btn second',onclick:accueil},'↻ Rejouer le test'))));
+  if(retour!==true){ Son.jouer(AUDIO.fin); envoyerResultats(r); }     // retour depuis la correction : ni audio, ni nouvel envoi
+}
+
+/* ==========================================================================
+   CORRECTION — accessible à l'élève UNIQUEMENT après les quatre activités (bouton du bilan).
+   Pendant le test, aucune bonne réponse n'est montrée. Aucune note, aucun message culpabilisant ;
+   les mots restent réécoutables (audios existants).
+   ========================================================================== */
+let derniereNav = 0;
+function correction(page){
+  if(Etat.verrou || Res.a4===null) return;                // jamais avant la fin du test
+  if(typeof page!=='number') page = 0;
+  const t = Date.now(); if(t-derniereNav<350) return; derniereNav = t;   // un double appui ne saute pas de page
+  nouvelEcran(); renderHaut(5);
+  const NB = 4, cles = ['a1','a2','a3','a4'];
+  const titre = D.competences.find(x=>x.cle===cles[page]).court;
+  const etat = (ok,txt) => h('p',{class:'etat '+(ok?'bien':'ensemble')}, (ok?'⭐ ':'🌱 ')+txt);
+  const ligne = (lab, val, cls) => h('p',{class:'corr-ligne-rep '+cls},h('span',{class:'lab',text:lab+' '}),h('strong',{text:val}));
+  let contenu;
+
+  if(cles[page]==='a1'){                                       // réponses réellement enregistrées : Res.a1
+    contenu = D.a1.map(it=>{
+      const r = Res.a1.find(x=>x.mot===it.mot), donne = r ? r.donne : null, ok = donne===it.entend;
+      const txt = v => v===null ? 'pas de réponse' : v ? 'Oui, j’entends I' : 'Non, je n’entends pas I';
+      return h('div',{class:'corr-q'},
+        h('div',{class:'corr-tete'},h('img',{src:it.img,alt:it.desc,draggable:'false'}),
+          h('div',{class:'corr-mot'},h('strong',{text:it.mot}),btnSon(AUDIO[it.audio],'🔊','Écouter le mot '+it.mot))),
+        ligne('Ta réponse :',txt(donne),'ta'),
+        ligne('La bonne réponse :',txt(it.entend),'bonne'),
+        etat(ok, ok ? 'Bravo, tu as trouvé !' : 'On écoute encore le mot ensemble.'));
+    });
+  } else if(cles[page]==='a2'){                                // Res.a2 : lettre choisie / lettre I attendue
+    contenu = Res.a2.map(x=>{
+      const cases = x.lettres.map(L=>{
+        const tag = L===D.lettre && L===x.donne ? 'Ton choix : le I' : L===D.lettre ? 'Le I' : L===x.donne ? 'Ta lettre' : '';
+        return h('div',{class:'corr-case-wrap'},
+          h('span',{class:'corr-case'+(L===D.lettre?' est-i':'')+(L===x.donne?' choisie':'')},L),
+          h('span',{class:'tag',text:tag}));
+      });
+      return h('div',{class:'corr-q'},
+        h('p',{class:'corr-manche',text:'Manche '+x.manche}),
+        h('div',{class:'corr-lettres'},cases),
+        ligne('Ta réponse :', x.donne===null ? 'pas de réponse' : 'la lettre '+x.donne,'ta'),
+        ligne('La bonne réponse :','la lettre '+D.lettre,'bonne'),
+        etat(x.ok, x.ok ? 'Bravo, tu as reconnu le I !' : 'Regarde le I en vert : on le retrouve ensemble.'));
+    });
+  } else if(cles[page]==='a3'){                                // Res.a3 : mots sélectionnés / mots avec I
+    contenu = [].concat.apply([],D.a3).map(w=>{
+      const r = Res.a3.find(x=>x.mot===w.mot), choisi = !!(r && r.donne);
+      const oublie = w.avecI && !choisi, aTort = !w.avecI && choisi, ok = !oublie && !aTort;
+      const retour = ok ? (w.avecI ? 'Bien vu, ce mot a un I !' : 'Bien vu, ce mot n’a pas de I.')
+                   : oublie ? 'Tu avais oublié ce mot : il y a un I.' : 'Tu avais choisi ce mot, mais il n’y a pas de I.';
+      return h('div',{class:'corr-q corr-mot3'+(oublie?' oublie':'')+(aTort?' a-tort':'')},
+        h('p',{class:'corr-texte'},Array.from(w.mot).map((c,k)=>h('span',{class:(c===D.lettre?'lettre-i ':'')+(k===w.muet?'muet':'')},c))),
+        (oublie||aTort) ? h('span',{class:'tag-mot',text: oublie ? 'Mot oublié' : 'Choisi à tort'}) : null,
+        ligne('Ta réponse :', choisi ? 'tu as choisi ce mot' : 'tu n’as pas choisi ce mot','ta'),
+        ligne('La bonne réponse :', w.avecI ? 'il y a un I' : 'il n’y a pas de I','bonne'),
+        etat(ok,retour));
+    });
+  } else {                                                     // tracé : uniquement « réalisé » / « non réalisé », jamais la qualité
+    const NS = 'http://www.w3.org/2000/svg', sv = (t,a)=>{ const e = document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); return e; };
+    const svg = sv('svg',{viewBox:'0 0 300 400',class:'trace-svg corr-trace',role:'img','aria-label':'Modèle de la lettre I : un point en haut, une flèche qui descend tout droit'});
+    svg.append(sv('rect',{class:'cadre',x:3,y:3,width:294,height:394,rx:22}), sv('rect',{class:'modele',x:128,y:70,width:44,height:260}),
+      sv('line',{class:'fleche',x1:150,y1:86,x2:150,y2:138}), sv('polygon',{class:'tete',points:'143,130 157,130 150,145'}), sv('circle',{class:'depart',cx:150,cy:86,r:5}));
+    const fait = Res.a4==='realise';
+    contenu = [h('div',{class:'corr-q'},svg,
+      h('p',{class:'corr-statut-trace '+(fait?'bien':'ensemble'),text:fait?'Tracé réalisé':'Tracé non réalisé'}),
+      h('p',{class:'corr-intro',text:'Voici le modèle : on commence par le point, en haut, et on descend tout droit.'}))];
+  }
+
+  const dernier = page===NB-1;
+  scene.replaceChildren(h('section',{class:'ecran correction'},
+    page===0 ? h('div',{class:'persos petit'},h('img',{src:IMG.leo,alt:'Léo',draggable:'false'}),h('img',{src:IMG.fadi,alt:'Fadi',draggable:'false'})) : null,
+    h('h1',{text:'On regarde ensemble !'}),
+    pointsProg(NB,page),
+    h('div',{class:'corr-section'},h('h2',{text:titre}),h('div',{class:'corr-liste'},contenu)),
+    h('div',{class:'actions'},
+      h('button',{type:'button',class:'btn second',onclick:()=> page===0 ? bilan(true) : correction(page-1)},'← Précédent'),
+      dernier ? h('button',{type:'button',class:'btn principal',onclick:()=>bilan(true)},'Retour au bilan')
+              : h('button',{type:'button',class:'btn principal',onclick:()=>correction(page+1)},'Suivant →')),
+    dernier ? h('div',{class:'actions'},h('button',{type:'button',class:'btn second petit',onclick:accueil},'↻ Rejouer le test')) : null));
+  window.scrollTo(0,0);
 }
 function envoyerResultats(r){
   if(window.parent===window) return;
