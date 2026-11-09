@@ -116,6 +116,14 @@ button:focus-visible{outline:4px solid var(--bleu);outline-offset:3px}
 .modele.ok{border-color:var(--vert);box-shadow:0 0 0 5px rgba(201,214,70,.45)}
 .rang-cases.ok::after{content:none}
 
+/* retour pédagogique : message doux, jamais de croix ni de rouge, aucun clignotement */
+.retour{min-height:clamp(52px,9vw,64px);width:100%;max-width:560px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:0}
+.retour p{margin:0;font-weight:bold;font-size:clamp(1.05rem,3.4vw,1.4rem);line-height:1.25;border-radius:18px;padding:8px 16px;text-align:center}
+.retour.essaie p{background:var(--jaune-clair);border:3px solid var(--jaune)}
+.retour.bravo p{background:var(--vert-clair);border:3px solid var(--vert)}
+.retour .son{width:48px;height:48px;font-size:1.25rem}
+.case.essaie{border-style:solid;border-color:var(--jaune);background:var(--jaune-clair)}
+
 /* fin */
 .persos{display:flex;gap:clamp(8px,3vw,28px);justify-content:center;align-items:flex-end}
 .persos img{height:clamp(120px,22vw,170px);width:auto;display:block}
@@ -174,7 +182,9 @@ const CONFIG = {
     accueil:    "Regarde le mot et place les lettres dans le bon ordre !",
     consigne:   "Place les lettres dans les bonnes cases !",
     aide:       "Regarde bien le modèle. Je vais t’aider !",
-    reussite:   "Bravo ! Tu as composé le mot !",
+    reussite:   "Bravo ! Tu as bien composé le mot !",
+    essaie:     "Essaie encore ! Regarde bien les lettres.",
+    modele:     "Regarde le modèle et recommence.",
     fin:        "Félicitations ! Tu as réussi !",
     finAffiche: "Bravo ! Tu as composé les mots !",
     preparation: "Cette activité est en cours de préparation."   // affiché si le mode « eleve » ne contient aucun mot
@@ -317,19 +327,20 @@ function manche(m){
   for(let k=0;k<30 && melange.join('')===cfg.mot && source.length>1;k++) melange = melanger(source);
   const tuiles = melange.map((l,i)=>({id:i,lettre:l}));
   const cases = Array(n).fill(null);          // id de la tuile posée dans chaque case (ou null)
-  let choisie = null, termine = false, aideN = 0;
+  let choisie = null, termine = false, aideN = 0, essais = 0;   // essais : compositions complètes incorrectes (aucune pénalité, simple suivi du message)
 
   /* ----- DOM ----- */
   const modele = h('div',{class:'modele','aria-label':'Mot modèle'},lettres.map(l=>h('span',{text:l})));
   const rangCases = h('div',{class:'rang-cases','aria-label':'Cases à remplir'});
   const plateau = h('div',{class:'plateau-lettres','aria-label':'Lettres mobiles'});
+  const retour = h('div',{class:'retour','role':'status','aria-live':'polite'});   // message doux après une composition (bonne ou mauvaise)
   const zoneOutils = h('div',{class:'outils'},
     h('button',{type:'button',class:'btn second petit',onclick:demanderAide},'Besoin d’aide'),
     h('button',{type:'button',class:'btn second petit',onclick:()=>{ if(!Etat.verrou && !termine) manche(m); }},'↻ Recommencer'));
   scene.replaceChildren(h('section',{class:'ecran'},
     titreConsigne(T.consigne,AUDIO.consigne),
     cfg.image ? h('img',{class:'illustration',src:cfg.image,alt:'',draggable:'false'}) : null,
-    modele, rangCases, plateau, zoneOutils));
+    modele, rangCases, retour, plateau, zoneOutils));
 
   const boutonCase = i => h('button',{type:'button',class:'case','data-i':i,'aria-label':'Case '+(i+1)});
   const boutonTuile = t => h('button',{type:'button',class:'tuile-l','data-tid':t.id,'aria-label':'Lettre '+t.lettre},t.lettre);
@@ -349,6 +360,7 @@ function manche(m){
   function nettoyerIndices(){
     document.querySelectorAll('.indice,.indice-fort,.cible').forEach(e=>e.classList.remove('indice','indice-fort','cible'));
     aideN = 0;
+    caseEls.forEach(e=>e.classList.remove('essaie'));
   }
   /* ----- actions sur l'état (jamais de pénalité : on peut tout retirer, tout déplacer) ----- */
   function poser(tid, i){
@@ -370,16 +382,36 @@ function manche(m){
   }
   function verifier(){
     if(cases.some(c=>c===null)) return;
-    if(cases.map(c=>tuiles[c].lettre).join('')===cfg.mot) reussir();
+    if(cases.map(c=>tuiles[c].lettre).join('')===cfg.mot) reussir(); else corriger();
+  }
+  /* mot complet mais dans le mauvais ordre : message doux, lettres toujours manipulables, pas de passage au mot suivant, pas de pénalité */
+  function afficherRetour(classe, texte, src, etiquetteSon){
+    retour.className = 'retour '+classe;
+    retour.replaceChildren(h('p',{text:texte}), src ? btnSon(src,'🔊',etiquetteSon) : null);
+  }
+  function corriger(){
+    if(termine) return;
+    essais++;
+    caseEls.forEach(e=>e.classList.add('essaie'));                                   // contour jaune doux, fixe
+    if(essais===1){
+      afficherRetour('essaie',T.essaie,AUDIO.encouragement,'Réécouter l’encouragement');
+      Son.jouer(AUDIO.encouragement);                                                  // audio d'encouragement existant, s'il est disponible
+    } else {
+      afficherRetour('essaie',T.modele,AUDIO.aide,'Réécouter l’aide');
+      modele.classList.add('indice');                                                  // le modèle est mis en évidence brièvement (contour fixe)
+      const e = essais; attendre(2500,id).then(ok=>{ if(ok && essais===e) modele.classList.remove('indice'); });
+    }                                                                                  // la réponse n'est jamais révélée automatiquement
   }
   async function reussir(){
     termine = true; verrouiller(true); nettoyerIndices();
-    caseEls.forEach(e=>e.classList.add('ok')); modele.classList.add('ok'); plateau.style.display = 'none';   // le plateau est vide : on le masque
+    caseEls.forEach(e=>{ e.classList.remove('essaie'); e.classList.add('ok'); }); modele.classList.add('ok'); plateau.style.display = 'none';
+    afficherRetour('bravo',T.reussite,null);   // le plateau est vide : on le masque
     faits[m] = true;
     if(!await attendre(800,id)) return;
     renderHaut(m);
-    await Son.jouer(AUDIO.reussite);                  // « Bravo ! Tu as composé le mot ! » : une fois par mot, jamais par lettre
+    await Son.jouer(AUDIO.reussite);                  // audio de félicitations existant : une fois par mot, jamais par lettre ; on attend sa fin
     if(id!==ecranId) return;
+    if(AUDIO.reussite) retour.append(btnSon(AUDIO.reussite,'🔊','Réécouter le bravo'));
     verrouiller(false);
     zoneOutils.replaceChildren(h('button',{type:'button',class:'btn principal',onclick:()=>{ m<MANCHES.length-1 ? manche(m+1) : fin(); }},'Continuer ➜'));
   }
