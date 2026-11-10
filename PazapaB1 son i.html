@@ -973,7 +973,7 @@ const LEX = {};
 });
 S.mots.forEach(w=>{ LEX[w.id] = { id:w.id, mot:w.mot, pos:w.pos, image:w.image, audio:w.audio }; });
 
-const ACTIVER_TRAIN = false;   /* petit train final : désactivé en attendant validation (code, dessin et audios conservés ; mettre true pour le réactiver) */
+const ACTIVER_TRAIN = true;    /* petit train final : conservé (validé par la professeure) ; false = le désactiver sans rien supprimer */
 const PHASES = [
   { cle:'debut',  nom:'Début',  pos:'debut',  jeux:[ { type:'tri', manches:[['ile'],['poussin'],['igloo'],['limace'],['hibou'],['image']] } ] },
   { cle:'milieu', nom:'Milieu', pos:'milieu', jeux:[
@@ -984,7 +984,7 @@ const PHASES = [
       { type:'choix',  manches:[['mamie','poussin','chevre'],['limace','papi','chevre']] },
       { type:'intrus', manches:[['mamie','papi','limace'],['papi','lit','chevre']] },
       { type:'tri',    manches:[['lit'],['papillon'],['souris'],['nid']] } ] },
-  { cle:'train',  nom:'Train',  pos:null,     jeux:[ { type:'train', manches:[['papillon'],['il'],['papi']] } ] }
+  { cle:'train',  nom:'Train',  pos:null,     jeux:[ { type:'train', manches:[['papillon'],['il'],['papi'],['igloo'],['souris'],['cerise']] } ] }
 ].filter(ph=>ph.cle!=='train' || ACTIVER_TRAIN);
 const PLAT = [];     /* les manches de la suite, dans l'ordre */
 PHASES.forEach((ph,pi)=>ph.jeux.forEach((j,ji)=>j.manches.forEach((ids,k)=>{
