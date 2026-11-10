@@ -934,8 +934,7 @@ function fin(){
     h('div',{class:'phrase-i'},pazita(),h('h1',{text:T.fin})),
     h('div',{class:'actions'},
       btnSon([A.consignes.fin],'large','🔊 Écouter','Écouter le message de fin'),
-      h('button',{type:'button',class:'btn second',onclick:()=>{ if(bloque()) return; accueil(); }},'↻ Rejouer'),
-      h('button',{type:'button',class:'btn principal',onclick:()=>{ if(bloque()) return; retour(); }},'Retour à la montagne'))));
+      h('button',{type:'button',class:'btn second',onclick:()=>{ if(bloque()) return; accueil(); }},'↻ Rejouer'))));
   { const tokF = ++ecranTok; Etat.consigneEnCours = true; majVerrou();           // phrase de fin automatique (pause 1 s avant), non interrompue
     attendre(Son.suite([A.consignes.fin], 1000)).finally(()=>{ if(tokF===ecranTok){ Etat.consigneEnCours = false; majVerrou(); } }); }
 }
