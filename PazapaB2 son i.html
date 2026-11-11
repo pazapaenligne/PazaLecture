@@ -985,6 +985,14 @@ function fin(n){
     h('p',{class:'parcours',text:'Tu peux t’entraîner encore, ou t’arrêter ici.'}),
     h('div',{class:'menu-niveaux'},boutons),
     h('div',{class:'actions'},h('button',{type:'button',class:'btn second petit',onclick:creer},'✔ J’ai terminé'),h('button',{type:'button',class:'btn second petit',onclick:accueil},'↻ Recommencer'))));
+  /* message de fin : lu UNE seule fois à chaque arrivée sur cet écran (« Bravo… le son » puis le son /i/), jamais en double ;
+     le bouton 🔊 permet de le réécouter. Verrou pendant la lecture, levé uniquement par cet écran (garde ecranId). */
+  if(R.consigneAutomatique!==false){
+    Etat.consigneEnCours = true; majVerrou();
+    attendre(Son.suite([A.consignes.fin,500,A.phoneme], R.delaiPageMs)).then(()=>{
+      if(id!==ecranId) return;
+      Etat.consigneEnCours = false; majVerrou(); });
+  }
 }
 
 
