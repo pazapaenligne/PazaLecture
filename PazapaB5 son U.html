@@ -115,6 +115,7 @@ button:focus-visible{outline:4px solid var(--bleu);outline-offset:3px}
 .micro .btn[hidden]{display:none}
 .micro .btn.enregistre{background:#fff;border-color:var(--jaune);box-shadow:0 0 0 4px var(--jaune-clair)}
 .aide-micro{margin:0;font-size:.95rem;color:#4a4a49;max-width:440px}
+.aide-micro:empty{display:none}
 
 /* fin */
 .persos{display:flex;gap:clamp(8px,3vw,28px);justify-content:center;align-items:flex-end}
@@ -163,7 +164,6 @@ const CONFIG = {
     microRecom:  "↻ Recommencer",
     microAttente:"Je t'écoute…",
     microAide:   "Ce n'est pas grave si l'enregistrement ne marche pas ici. Dis le son à voix haute, puis appuie sur « J'ai essayé ».",
-    microPrive:  "Ta voix reste sur cet appareil.",
     microRetour: "💬 Écouter mon retour",
     microAttenteRetour: "Pazita t'écoute…",
     /* Retours de Pazita : formulations validées. Ils encouragent l'essai ; aucun ne juge la prononciation. */
@@ -505,7 +505,7 @@ function creerMicro(){
   bStart.addEventListener('click',demarrer); bStop.addEventListener('click',arreter);
   bEcoute.addEventListener('click',ecouter); bRetour.addEventListener('click',demanderRetour); bRecom.addEventListener('click',recommencer);
 
-  if(!possible) indisponible(T.microRefus); else msg.textContent = T.microPrive;
+  if(!possible) indisponible(T.microRefus);
   const nettoyer = ()=>{ jeton++; arretMinuteur(); if(rec && rec.state!=='inactive'){ try{ rec.onstop = null; rec.stop(); }catch(_){} } libererFlux(); bloquerSons(false); effacer(); };
   return { noeud, nettoyer };
 }
