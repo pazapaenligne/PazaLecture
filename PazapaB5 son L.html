@@ -215,12 +215,11 @@ const CONFIG = {
       {t:"LILA", a:"lila", ok:["lila","lilas","lilla","lilat"]},
       {t:"LOLA", a:"lola", ok:["lola","lolas","lolla","lolat"]},
       {t:"LUI",  a:"lui",  ok:["lui","luis"]},
-      {t:"IL",   a:"il",   ok:["il","ils","ile","île","y"]},
       {t:"ALI",  a:"ali",  ok:["ali","alli","allie","ally","alit","alie","hali","halli","allis"]}
     ]},
     { cat:"phrases", passage:"passagePhrases", items:[
       {t:"LOLA A LU.", a:"phrase1", mots:[ {ok:["lola","lolas","lolla"]}, {ok:["a","à","as","ah","ha"],opt:true}, {ok:["lu","lus","lue","lut"]} ]},
-      {t:"LOLA LIT.",  a:"phrase2", mots:[ {ok:["lola","lolas","lolla"]}, {ok:["li","lit","lie","lis","lys"]} ]}
+      {t:"LOLA LI{T}.",  a:"phrase2", mots:[ {ok:["lola","lolas","lolla"]}, {ok:["li","lit","lie","lis","lys"]} ]}
     ]}
   ],
 
@@ -399,7 +398,7 @@ function lettre(){
   const L = C.lettre;
   scene.replaceChildren(h('section',{class:'ecran lettre'},
     titreConsigne(T.quelSon,AUDIO.quelSon),
-    h('div',{class:'item'},h('div',{class:'carte lettre','aria-label':'La lettre '+L.t},texteMuet(L.t)),btnSon(()=>AUDIO[L.a],'🔊','Écouter le son')),
+    h('div',{class:'item'},h('div',{class:'carte lettre','aria-label':'La lettre '+L.t},h('span',{},texteMuet(L.t))),btnSon(()=>AUDIO[L.a],'🔊','Écouter le son')),
     h('div',{class:'outils'},btnRetour(),btnContinuer())));
   Son.jouer(AUDIO.quelSon);
 }
@@ -538,7 +537,7 @@ function page(p){
   nouvelEcran();
   const E = C.etapes[p.e], it = E.items[p.k], syl = E.cat==='syllabes';
   renderHaut(p.e, p.rang, p.k, false);
-  const carte = h('div',{class:'carte'+(E.cat==='phrases'?' phrase':''),'aria-label':sansAccolades(it.t)}, texteMuet(it.t));
+  const carte = h('div',{class:'carte'+(E.cat==='phrases'?' phrase':''),'aria-label':sansAccolades(it.t)}, h('span',{},texteMuet(it.t)));
   const bRep = btnSon(()=>AUDIO[it.a],'🔊 '+T.ecouterReponse,'Écouter la réponse : '+sansAccolades(it.t),'large'+(syl?' jaune':''));
   bRep.hidden = true;
   const item = h('div',{class:'item'}, carte, bRep);
