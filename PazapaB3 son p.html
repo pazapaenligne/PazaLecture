@@ -39,8 +39,8 @@
 -->
 <style>
 :root{
-  --bleu:#36BBD6; --bleu-clair:#E4P7FB;
-  --vert:#C9D646; --vert-clair:#P3P7DD; --vert-fonce:#8FAE1B;
+  --bleu:#36BBD6; --bleu-clair:#E4F7FB;
+  --vert:#C9D646; --vert-clair:#F3F7DD; --vert-fonce:#8FAE1B;
   --jaune:#FCC104; --jaune-clair:#FFF3D6;
   --gris:#2E2E2D; --gris-clair:#EBEBEB;
   --rouge:#DB2E38; --lettre:#395EB3;
@@ -575,7 +575,7 @@ const rc = (x,y,w,h,f,rx=0) => '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="
 const ce = (x,y,r,f) => '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+f+'" stroke="'+dk(f)+'" stroke-width="2"/>';
 const po = (pts,f) => '<polygon points="'+pts+'" fill="'+f+'" stroke="'+dk(f,0.1)+'" stroke-width="1.5" stroke-linejoin="round"/>';
 const tr = (x1,y1,x2,y2,c,l) => '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+c+'" stroke-width="'+l+'" stroke-linecap="round"/>';
-const ombre = (cx,cy,rx,ry) => '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+(ry||rx*0.22)+'" fill="#2P5A24" opacity=".2"/>';
+const ombre = (cx,cy,rx,ry) => '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+(ry||rx*0.22)+'" fill="#2F5A24" opacity=".2"/>';
 let graine = 7; const hasard = () => (graine = (graine*16807) % 2147483647) / 2147483647;     // tirage fixe : le décor ne change jamais
 const nuage = (x,y,k) => '<g transform="translate('+x+' '+y+') scale('+k+')"><ellipse cx="0" cy="8" rx="56" ry="15" fill="#DCEBF5"/><g fill="#fff"><ellipse cx="0" cy="2" rx="54" ry="16"/><circle cx="-20" cy="-8" r="19"/><circle cx="6" cy="-17" r="25"/><circle cx="30" cy="-6" r="17"/></g></g>';
 const colline = (y,haut,col,op) => '<path d="M0 '+y+' Q120 '+(y-haut)+' 260 '+(y-haut*0.35)+' T520 '+(y-haut*0.8)+' T800 '+(y-haut*0.3)+' L800 440 L0 440 Z" fill="'+col+'" opacity="'+(op||1)+'"/>';
@@ -583,7 +583,7 @@ const lisiere = (y,n) => { let r = ''; graine = 11; for(let i=0;i<n;i++){ const 
 const herbes = (y0,y1,n) => { let r = ''; graine = 23; for(let i=0;i<n;i++){ const x = hasard()*800, y = y0+hasard()*(y1-y0), c = i%3?'#B4D25A':'#C9E079'; r += '<path d="M'+x.toFixed(0)+' '+y.toFixed(0)+' l-2 -7 M'+x.toFixed(0)+' '+y.toFixed(0)+' l1 -8 M'+x.toFixed(0)+' '+y.toFixed(0)+' l4 -6" stroke="'+c+'" stroke-width="2" stroke-linecap="round" fill="none"/>'; } return r; };
 /* fond commun : ciel dégradé, soleil, collines lointaines, lisière d'arbres, prairie dégradée et brins d'herbe */
 const fondCommun = (horizon) =>
-  '<defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8BCDEB"/><stop offset=".6" stop-color="#CBEAF6"/><stop offset="1" stop-color="#P6FBFD"/></linearGradient>'+
+  '<defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8BCDEB"/><stop offset=".6" stop-color="#CBEAF6"/><stop offset="1" stop-color="#F6FBFD"/></linearGradient>'+
   '<radialGradient id="soleil" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF6C8" stop-opacity=".95"/><stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></radialGradient>'+
   '<linearGradient id="pre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C6DE74"/><stop offset="1" stop-color="#9CC450"/></linearGradient></defs>'+
   '<rect width="800" height="440" fill="url(#ciel)"/><circle cx="700" cy="60" r="90" fill="url(#soleil)"/><circle cx="700" cy="60" r="26" fill="#FFF3B0"/>'+
@@ -604,13 +604,13 @@ const PAYSAGES = {
   /* NIVEAU 1 — LE CARROUSEL : décor simple, quelques grandes surfaces */
   carrousel(){
     const Z = [
-      { id:'frise',   fond:'#P6AFC1', box:[250,212,300,84], cap:1, svg:rc(250,212,300,84,'#P6AFC1',8) },
+      { id:'frise',   fond:'#F6AFC1', box:[250,212,300,84], cap:1, svg:rc(250,212,300,84,'#F6AFC1',8) },
       { id:'plateau', fond:'#8FD3E8', box:[225,296,350,70], cap:2, svg:rc(225,296,350,70,'#8FD3E8',10) },
       { id:'ballonG', fond:'#FCD34D', box:carre(120,150,62), cap:1, svg:ballon(120,150,62,'#FCD34D',-6) },
       { id:'ballonD', fond:'#A7D95B', box:carre(690,132,62), cap:1, svg:ballon(690,132,62,'#A7D95B',8) },
       { id:'arbreG',  fond:'#8CCB6A', box:carre(95,300,66), cap:1, svg:arbre(95,300,66,'#8CCB6A') },
       { id:'arbreD',  fond:'#9BD57B', box:carre(715,300,62), cap:1, svg:arbre(715,300,62,'#9BD57B') },
-      { id:'chemin',  fond:'#P3E3BA', box:[320,354,200,76], cap:1, svg:rc(300,350,240,82,'#P3E3BA',24) }
+      { id:'chemin',  fond:'#F3E3BA', box:[320,354,200,76], cap:1, svg:rc(300,350,240,82,'#F3E3BA',24) }
     ];
     const decor = fondCommun(318) + nuage(210,62,1)+nuage(540,54,.9)+nuage(400,30,.6) +
       barriere(0,210,318) + barriere(590,800,318) + ombre(400,372,190,16) + lampadaire(170,354,70) + lampadaire(640,354,70) +
@@ -623,14 +623,14 @@ const PAYSAGES = {
   },
   /* NIVEAU 2 — LA GRANDE ROUE : plus riche (roue, cabines, guichet, buissons, panneau, guirlandes) */
   roue(){
-    const cx = 400, cy = 176, R = 128, coul = ['#8FD3E8','#P6AFC1','#FCD34D','#A7D95B','#P9A95B','#B9A3E3','#7ED6C4','#P59A96'];
+    const cx = 400, cy = 176, R = 128, coul = ['#8FD3E8','#F6AFC1','#FCD34D','#A7D95B','#F9A95B','#B9A3E3','#7ED6C4','#F59A96'];
     const Z = []; let cab = '';
     for(let i=0;i<8;i++){
       const a = -Math.PI/2 + i*Math.PI/4, x = Math.round(cx+R*Math.cos(a)), y = Math.round(cy+R*Math.sin(a));
       cab += tr(cx,cy,x,y-38,'#8E9AB8',3) + tr(x,y-38,x,y-34,'#8E9AB8',3);
       Z.push({ id:'cabine'+i, fond:coul[i], box:[x-42,y-34,84,76], cap:1, svg:rc(x-48,y-42,96,10,dk(coul[i],0.1),5) + rc(x-42,y-34,84,76,coul[i],14) });
     }
-    Z.push({ id:'guichet', fond:'#P9A95B', box:[60,262,150,98], cap:1, svg:ombre(135,364,90)+rc(60,262,150,98,'#P9A95B',6)+po('46,264 135,212 224,264','#DB2E38')+po('90,264 112,226 135,212 135,264','#P4P4P4')+po('135,264 135,212 158,226 180,264','#P4P4P4') });
+    Z.push({ id:'guichet', fond:'#F9A95B', box:[60,262,150,98], cap:1, svg:ombre(135,364,90)+rc(60,262,150,98,'#F9A95B',6)+po('46,264 135,212 224,264','#DB2E38')+po('90,264 112,226 135,212 135,264','#F4F4F4')+po('135,264 135,212 158,226 180,264','#F4F4F4') });
     Z.push({ id:'buissonG', fond:'#8CCB6A', box:[620-60,350-35,120,70], cap:1, svg:ombre(620,398,90)+'<ellipse cx="620" cy="350" rx="92" ry="54" fill="#8CCB6A" stroke="'+dk('#8CCB6A')+'" stroke-width="2"/>' });
     Z.push({ id:'buissonD', fond:'#9BD57B', box:[310-60,396-35,120,70], cap:1, svg:'<ellipse cx="310" cy="396" rx="92" ry="52" fill="#9BD57B" stroke="'+dk('#9BD57B')+'" stroke-width="2"/>' });
     Z.push({ id:'panneau', fond:'#B9A3E3', box:[610,196,140,76], cap:1, svg:tr(640,272,640,352,'#8A6B3E',8)+tr(720,272,720,352,'#8A6B3E',8)+rc(610,196,140,76,'#B9A3E3',10)+ampoules(620,740,203,20,'#FFE066') });
@@ -651,19 +651,19 @@ const PAYSAGES = {
       { id:'muretA',  fond:'#FCD34D', box:[30,170,230,100], cap:2, svg:rc(30,170,230,100,'#FCD34D') },
       { id:'comptA',  fond:'#8FD3E8', box:[20,270,250,80],  cap:2, svg:rc(20,270,250,80,'#8FD3E8',6) },
       { id:'muretB',  fond:'#FDEBC8', box:[540,170,230,100], cap:2, svg:rc(540,170,230,100,'#FDEBC8') },
-      { id:'comptB',  fond:'#P9A95B', box:[530,270,250,80],  cap:2, svg:rc(530,270,250,80,'#P9A95B',6) },
+      { id:'comptB',  fond:'#F9A95B', box:[530,270,250,80],  cap:2, svg:rc(530,270,250,80,'#F9A95B',6) },
       { id:'tente',   fond:'#B9A3E3', box:[330,226,140,124], cap:1, svg:rc(330,226,140,124,'#B9A3E3') },
       { id:'ballon1', fond:'#A7D95B', box:carre(150,58,50), cap:1, svg:ballon(150,58,50,'#A7D95B',6) },
-      { id:'ballon2', fond:'#P6AFC1', box:carre(400,48,50), cap:1, svg:ballon(400,48,50,'#P6AFC1',-6) },
+      { id:'ballon2', fond:'#F6AFC1', box:carre(400,48,50), cap:1, svg:ballon(400,48,50,'#F6AFC1',-6) },
       { id:'ballon3', fond:'#FCD34D', box:carre(650,58,50), cap:1, svg:ballon(650,58,50,'#FCD34D',6) },
-      { id:'chemin',  fond:'#P3E3BA', box:[40,362,720,70], cap:3, svg:rc(40,362,720,70,'#P3E3BA',22) }
+      { id:'chemin',  fond:'#F3E3BA', box:[40,362,720,70], cap:3, svg:rc(40,362,720,70,'#F3E3BA',22) }
     ];
-    const rouelointaine = (x,y,r) => '<g opacity=".45"><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="#7P8FB0" stroke-width="3"/>'+[0,1,2,3].map(i=>{const a=i*Math.PI/4; return tr(x-r*Math.cos(a),y-r*Math.sin(a),x+r*Math.cos(a),y+r*Math.sin(a),'#7P8FB0',2);}).join('')+tr(x,y,x-r*0.5,y+r+10,'#7P8FB0',3)+tr(x,y,x+r*0.5,y+r+10,'#7P8FB0',3)+'</g>';
+    const rouelointaine = (x,y,r) => '<g opacity=".45"><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="#7F8FB0" stroke-width="3"/>'+[0,1,2,3].map(i=>{const a=i*Math.PI/4; return tr(x-r*Math.cos(a),y-r*Math.sin(a),x+r*Math.cos(a),y+r*Math.sin(a),'#7F8FB0',2);}).join('')+tr(x,y,x-r*0.5,y+r+10,'#7F8FB0',3)+tr(x,y,x+r*0.5,y+r+10,'#7F8FB0',3)+'</g>';
     const decor = fondCommun(320) + nuage(250,70,.8)+nuage(540,84,.8)+nuage(70,100,.6) + rouelointaine(400,196,62) +
       '<path d="M0 346 H800 V440 H0 Z" fill="#D7E58C" opacity=".0"/>' +
       arbre(296,318,26,'#8CCB6A') + arbre(506,320,26,'#9BD57B') + ombre(150,356,150,10) + ombre(650,356,150,10) +
       bandes(16,274,120,172,7,'#DB2E38','#fff') + rc(12,114,266,8,'#B8222B',3) + tr(30,172,30,352,'#8A6B3E',6) + tr(260,172,260,352,'#8A6B3E',6) +        // stand A : auvent, montants
-      bandes(526,784,120,172,7,'#P57FA0','#fff') + rc(522,114,266,8,'#C75A7D',3) + tr(540,172,540,352,'#8A6B3E',6) + tr(770,172,770,352,'#8A6B3E',6) +   // stand B
+      bandes(526,784,120,172,7,'#F57FA0','#fff') + rc(522,114,266,8,'#C75A7D',3) + tr(540,172,540,352,'#8A6B3E',6) + tr(770,172,770,352,'#8A6B3E',6) +   // stand B
       po('306,228 400,112 494,228','#fff') + bandes(306,494,0,228,8,'#36BBD6','#fff',[400,112]) + ce(400,108,8,'#FCC104') + tr(400,112,400,92,'#8A6B3E',3) + po('400,92 424,99 400,106','#DB2E38') +    // tente
       '<path d="M270 128 Q300 150 330 128 M470 128 Q500 150 530 128" fill="none" stroke="#8794A3" stroke-width="2"/>';
     const devant = ampoules(34,256,174,22,'#FFE066') + ampoules(544,766,174,22,'#FFE066') + ampoules(336,464,230,20,'#FFE066');
